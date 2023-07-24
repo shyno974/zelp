@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,7 +37,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Ville $ville_id = null;
+    private ?Ville $ville = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Restaurant::class)]
+    private Collection $restaurants;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Avis::class)]
+    private Collection $avis;
+
+    public function __construct()
+    {
+        $this->restaurants = new ArrayCollection();
+        $this->avis = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -131,14 +145,74 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getVilleId(): ?Ville
+    public function getVille(): ?Ville
     {
-        return $this->ville_id;
+        return $this->ville;
     }
 
-    public function setVilleId(?Ville $ville_id): static
+    public function setVille(?Ville $ville): static
     {
-        $this->ville_id = $ville_id;
+        $this->ville = $ville;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Restaurant>
+     */
+    public function getRestaurants(): Collection
+    {
+        return $this->restaurants;
+    }
+
+    public function addRestaurant(Restaurant $restaurant): static
+    {
+        if (!$this->restaurants->contains($restaurant)) {
+            $this->restaurants->add($restaurant);
+            $restaurant->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRestaurant(Restaurant $restaurant): static
+    {
+        if ($this->restaurants->removeElement($restaurant)) {
+            // set the owning side to null (unless already changed)
+            if ($restaurant->getUser() === $this) {
+                $restaurant->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            // set the owning side to null (unless already changed)
+            if ($avi->getUser() === $this) {
+                $avi->setUser(null);
+            }
+        }
 
         return $this;
     }
