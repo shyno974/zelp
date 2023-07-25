@@ -8,3 +8,5 @@
                            - php bin/console doctrine:migrations:migrate
 4. data se trouvant dans le fichier zelp.sql
 5. lancer symfony : symfony server:start
+
+page actuellement fonctionnel login ( "/login" ), page d'accueil ( " / " ) et la redirection vers les info du restaurant ( en cliquant sur l'un des restaurant disponible )
