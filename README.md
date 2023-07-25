@@ -6,5 +6,5 @@
 3. faire une migration :
                            - php bin/console make:migration
                            - php bin/console doctrine:migrations:migrate
-
-4. lancer symfony : symfony server:start
+4. data se trouvant dans le fichier zelp.sql
+5. lancer symfony : symfony server:start
