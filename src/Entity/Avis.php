@@ -39,6 +39,10 @@ class Avis
         $this->avis = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->message;
+    }
     public function getId(): ?int
     {
         return $this->id;
